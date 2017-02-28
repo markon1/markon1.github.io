@@ -1,0 +1,86 @@
+#notaccordion{
+    width:100%;
+
+}
+
+#map{
+    height:450px;
+}
+
+.cities{
+    background-color:#838895;
+
+}
+
+h3{
+    background-color:#838895;
+}
+
+.accordionHeader{
+    color:white;
+}
+
+#timeContainer{
+    margin-left: 18%;
+
+    padding-right:30px;
+}
+
+.rowPad{
+    padding-left:50px;
+}
+
+.rowPad2{
+    padding-left:30px;
+    padding-right:30px;
+}
+
+.rowPad3{
+    padding-left:18px;
+    padding-right:18px;
+}
+
+.divide3{
+    width:30%;
+    float:left;
+}
+
+.graphItem{
+    width: 100%;
+    height: 300px;
+    margin-left:1px;
+}
+
+.filteredTable{
+    width: 100%;
+    margin-left:1px;
+}
+
+.magDepth{
+    width:50%;
+    height: 80%;
+    float:left;
+}
+
+#dc-time-chart,#yearly-bubble-chart{
+    height:50%;
+    width:100%;
+
+}
+
+#headerText{
+    text-align:right;
+    float:right;
+    vertical-align: text-top;
+    font-weight:bold;
+    font-size:16px;
+
+}
+
+.comingSoon{
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+    width: 100%;
+    margin-left:1px;
+}

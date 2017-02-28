@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0' name='viewport'>
+
+  <title>dc.js Experiment</title>
+
+  <script src='js/d3.js' type='text/javascript'></script>
+  <script src='js/crossfilter.js' type='text/javascript'></script>
+  <script src='js/dc.js' type='text/javascript'></script>
+  <script src='js/jquery-1.9.1.min.js' type='text/javascript'></script>
+  <script src="js/jquery-ui.min.js" type="text/javascript"></script>
+  <script src='js/bootstrap.min.js' type='text/javascript'></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+  <script type="text/javascript" src="js/leaflet.label.js"></script>
+  <script type="text/javascript" src="js/underscore-min.js"></script>
+  <script type="text/javascript" src="js/colorbrewer.js"></script>
+
+  <link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+  <link href='css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+  <link href='css/dc.css' rel='stylesheet' type='text/css'>
+  <link href='css/colorbrewer.css' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+  <link href='css/earthquakes.css' rel='stylesheet' type='text/css'>
+
+
+</head>
+
+<body>
+
+
+<div class='container' id='main-container'>
+<div class='content'>
+<div class='container' >
+
+<div class="row rowPad3">
+  <img src="images/catrisk.png">
+  <div id="headerText" >New York <br>New York 10016</div>
+</div>
+
+  <br><br>
+
+<div class="row rowPad3">
+  <select name="cities" id="cities" class="cities">
+    <option>Chile, Santiago de Chile</option>
+    <option>Ecuador, Quito</option>
+    <option>El Salvador, San Salvador</option>
+    <option>Haiti, Port-au-Prince</option>
+    <option>Indonesia, Jakarta</option>
+    <option>Iran, Tehran</option>
+    <option>Italy, Calabria</option>
+    <option>Italy, Umbria</option>
+    <option>Japan, Nagoya</option>
+    <option>Japan, Osaka</option>
+    <option>Japan, Tokyo</option>
+    <option>Mexico, Mexico City</option>
+    <option>Pakistan, Islamabad</option>
+    <option>Peru, Lima</option>
+    <option>Philippines, Manila</option>
+    <option>Turkey, Istanbul</option>
+    <option>USA, Anchorage</option>
+    <option>USA, Los Angeles</option>
+    <option>USA, San Francisco</option>
+    <option>Venezuela, Caracas</option>
+  </select>
+
+  <small><a id="all" style="cursor:pointer">reset all</a></small>
+
+
+</div>
+
+
+
+  <div id="notaccordion">
+    <h3><a href="#" class="accordionHeader">Map</a></h3>
+    <div id="map" class="toggle">
+    </div>
+
+    <h3><a href ="#" class="accordionHeader">Time Filters</a></h3>
+    <div class="row toggle graphItem">
+      <div id="timeContainer">
+
+      <div class="pie-chart divide3">
+        <div class="dc-chart" id="chart-ring-year"><h4>Year <small><a id="year" style="cursor:pointer">reset</a></small></h4></div>
+      </div>
+
+      <div class="pie-chart divide3">
+        <div class="dc-chart" id="chart-ring-month"><h4>Month <small><a id="month" style="cursor:pointer">reset</a></small></h4></div>
+      </div>
+
+      <div class="quarter-chart divide3">
+        <div class="dc-chart" id="chart-ring-quarter"> <h4>Quarter <small><a id="quarter" style="cursor:pointer">reset</a></small></h4></div>
+      </div>
+
+      </div>
+    </div>
+
+    <h3><a href="#" class="accordionHeader">Magnitude & Depth Distribution</a></h3>
+    <div class='row graphItem toggle'>
+      <div class='pie-graph magDepth' id='dc-magnitude-chart'>
+        <h4>Distribution of Magnitude <small><a id="magnitude" style="cursor:pointer">reset</a></small></h4>
+      </div>
+      <div class='pie-graph magDepth' id='dc-depth-chart'>
+        <h4>Distribution of Depth (km) <small><a id="depth" style="cursor:pointer">reset</a></small></h4>
+      </div>
+    </div>
+
+    <h3><a href="#" class="accordionHeader">Frequencies</a></h3>
+    <div class="toggle">
+    <div class='row rowPad'>
+      <h4>Daily frequency of events <small><a id="time" style="cursor:pointer">reset</a></small></h4>
+      <div id='dc-time-chart'>
+      </div>
+    </div>
+
+    <div class="row rowPad">
+      <h4>Yearly frequency and severity <small><a id="yearlyBubble" style="cursor:pointer">reset</a></small></h4>
+      <div id="yearly-bubble-chart"></div>
+    </div>
+    </div>
+
+
+    <h3><a href="#" class="accordionHeader">Filtered Tables</a></h3>
+      <div class='row filteredTable toggle'>
+	  <div class='pie-graph'>
+        <table class='table table-hover' id='dc-table-graph'>
+          <thead>
+            <tr class='header'>
+              <th>DTG</th>
+              <th>Lat</th>
+              <th>Long</th>
+              <th>Depth</th>
+              <th>Magnitude</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+        </table>
+	  </div>
+    </div>
+
+    <h3><a href="#" class="accordionHeader">Static & Rolling Kendal & Person Correlations</a></h3>
+      <div class="row comingSoon">
+        <p>coming soon</p>
+        <img src="images/catrisk.png">
+      </div>
+
+    <h3><a href="#" class="accordionHeader">Cat Contract Design</a></h3>
+    <div class="row comingSoon">
+      <p>coming soon</p>
+      <img src="images/catrisk.png">
+    </div>
+
+    <h3><a href="#" class="accordionHeader">Custom Loss Functions & Payouts</a></h3>
+    <div class="row comingSoon">
+      <p>coming soon</p>
+      <img src="images/catrisk.png">
+    </div>
+
+    <h3><a href="#" class="accordionHeader">Launch Contract in CatRisk's Blockchain</a></h3>
+    <div class="row comingSoon">
+      <p>coming soon</p>
+      <img src="images/catrisk.png">
+    </div>
+
+
+
+
+
+
+  </div>
+
+
+
+<p>Earthquake data via <a href="http://www.usgs.gov/">USGS</a>.</p>
+
+
+</div>
+</div>
+</div>
+  
+<script>
+  
+/**********************************
+* Step0: Load data from json file *
+**********************************/
+
+// load data from a csv file
+d3.csv("/cat2.csv", function (error, data) {
+
+  // format our data
+  var fullDateFormat = d3.time.format("%Y-%m-%d %H:%M:%S.%L");
+  var yearFormat = d3.time.format('%Y');
+  var monthFormat = d3.time.format('%b');
+  var monthFormat2 = d3.time.format('%m');
+
+  var city = Object.keys(data[0])[Object.keys(data[0]).length-1];
+
+  var minDepth=9999999,maxDepth= 0,minMagnitude=9999999,maxMagnitude= 0,maxCount= 0,minCount=9999999;
+  var minDepthPerGroup=9999999,maxDepthPerGroup= 0;
+
+
+  _.forEach(data,function(d) {
+    d.dtg   = fullDateFormat.parse(d.origintime);
+    d.year = +yearFormat(d.dtg);
+    d.month = monthFormat(d.dtg);
+    d.lat   = +d.latitude;
+    d.long  = +d.longitude;
+    d.mag   = d3.round(+d.magnitude,1);
+    d.depth = d3.round(+d.depth,0);
+    d.distToTarget = d[city];
+
+    if (monthFormat2(d.dtg) <= 3) {
+      d.quarter = 1;
+    } else if (monthFormat2(d.dtg) > 3 && monthFormat2(d.dtg) <= 6) {
+      d.quarter = 2;
+    } else if (monthFormat2(d.dtg) > 6 && monthFormat2(d.dtg) <= 9) {
+      d.quarter = 3;
+    } else {
+      d.quarter = 4;
+    }
+
+    if(d.depth>maxDepth){
+      maxDepth = d.depth;
+    }
+
+    if(d.depth<minDepth){
+      minDepth = d.depth;
+    }
+
+    if(d.mag>maxMagnitude){
+      maxMagnitude = d.mag;
+    }
+
+    if(d.mag<minMagnitude){
+      minMagnitude = d.mag;
+    }
+
+  });
+
+/******************************************************
+* Step1: Create the dc.js chart objects & ling to div *
+******************************************************/
+
+  var magnitudeChart = dc.barChart("#dc-magnitude-chart");
+  var depthChart = dc.barChart("#dc-depth-chart");
+  var timeChart = dc.lineChart("#dc-time-chart");
+  var dataTable = dc.dataTable("#dc-table-graph");
+  var yearChart   = dc.pieChart('#chart-ring-year');
+  var monthChart   = dc.pieChart('#chart-ring-month');
+  var yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
+  var quarterChart = dc.pieChart('#chart-ring-quarter');
+
+/****************************************
+* 	Run the data through crossfilter    *
+****************************************/
+
+  var facts = crossfilter(data);  // Gets our 'facts' into crossfilter
+
+/******************************************************
+* Create the Dimensions                               *
+* A dimension is something to group or filter by.     *
+* Crossfilter can filter by exact value, or by range. *
+******************************************************/
+
+  // for Magnitude
+  var magValue = facts.dimension(function (d) {
+    return d.mag;       // group or filter by magnitude
+  });
+  var magValueGroupSum = magValue.group()
+    .reduceSum(function(d) { return d.mag; });	// sums the magnitudes per magnitude
+  var magValueGroupCount = magValue.group()
+    .reduceCount(function(d) { return d.mag; }) // counts the number of the facts by magnitude
+
+  // For datatable
+  var timeDimension = facts.dimension(function (d) {
+    return d.dtg;
+  }); // group or filter by time
+
+  // for Depth
+  var depthValue = facts.dimension(function (d) {
+    return d.depth;
+  });
+  var depthValueGroup = depthValue.group();
+  
+  // define a daily volume Dimension
+  var volumeByDay = facts.dimension(function(d) {
+    return d3.time.day(d.dtg);
+  });
+  // map/reduce to group sum
+  var volumeByDayGroup = volumeByDay.group()
+    .reduceCount(function(d) { return d.dtg; });
+
+  // Year
+  var yearDim  = facts.dimension(function(d) {return d.year;})
+  var countPerYear = yearDim.group().reduceCount();
+
+  var quarterDim = facts.dimension(function (d) {
+    return d.quarter;
+  });
+  var countPerQuarter = quarterDim.group().reduceSum(function(d){
+    return d.quarter;
+  });
+
+  var countPerYearBubble = yearDim.group().reduce(
+          /* callback for when data is added to the current filter results */
+          function (p, v) {
+            ++p.count;
+            p.sumMagnitude += v.mag;
+            p.avgMagnitude = p.sumMagnitude / p.count;
+            p.perWeek = p.count / 52;
+
+
+            if(p.count>maxCount){
+              maxCount = p.count;
+            }
+            if(p.count<minCount){
+              minCount = p.count;
+            }
+            yearlyBubbleChart.colorDomain([minCount, maxCount]);
+            yearlyBubbleChart.xAxisPadding(maxCount/52/20);
+            yearlyBubbleChart.r(d3.scale.linear().domain([minCount, maxCount]));
+
+
+            return p;
+          },
+          /* callback for when data is removed from the current filter results */
+          function (p, v) {
+            --p.count;
+            p.sumMagnitude -= v.mag;
+            p.avgMagnitude = p.sumMagnitude / p.count;
+            p.perWeek = p.count / 52;
+
+            if(p.count>maxCount){
+              maxCount = p.count;
+            }
+
+            if(p.count<minCount){
+              minCount = p.count;
+            }
+
+            yearlyBubbleChart.colorDomain([minCount, maxCount]);
+            yearlyBubbleChart.xAxisPadding(maxCount/52/20);
+            yearlyBubbleChart.r(d3.scale.linear().domain([minCount, maxCount]));
+
+            return p;
+          },
+          /* initialize p */
+          function () {
+            yearlyBubbleChart.colorDomain([0, 0]);
+
+            return {
+              count: 0,
+              sumMagnitude: 0,
+              avgMagnitude: 0,
+              perWeek:0
+            };
+          });
+
+  // Month
+  var monthDim  = facts.dimension(function(d) {return d.month;})
+  var countPerMonth = monthDim.group().reduceCount();
+
+
+  allDim = facts.dimension(function(d) {return d;});
+
+/***************************************
+* 	Step4: Create the Visualisations   *
+***************************************/
+
+// Leaflet Map
+  var map = L.map('map');
+
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',{
+    attribution: '<img src="images/catrisk2.png"/><br>Leaflet/CatRisk/USGS'
+  }).addTo(map);
+
+  map.attributionControl.setPrefix("");
+  map.zoomControl.setPosition("topright");
+
+  var markers = new L.FeatureGroup();
+  
+  // Magnitide Bar Graph Summed
+  magnitudeChart
+    .margins({top: 10, right: 10, bottom: 20, left: 40})
+    .dimension(magValue)								// the values across the x axis
+    .group(magValueGroupSum)							// the values on the y axis
+	.transitionDuration(500)
+    .centerBar(true)	
+	.gap(70)                                            // bar width Keep increasing to get right then back off.
+    .x(d3.scale.linear().domain([minMagnitude-0.5, maxMagnitude+1])) //this is the x axis scale
+	.elasticY(true)
+	.xAxis().tickFormat(function(v) {return v;});	
+
+  // Depth bar graph
+  depthChart
+    .margins({top: 10, right: 10, bottom: 20, left: 40})
+    .dimension(depthValue)
+    .group(depthValueGroup)
+	.transitionDuration(500)
+    .centerBar(true)	
+	.gap(1)                    // bar width Keep increasing to get right then back off.
+    .x(d3.scale.linear().domain([0, maxDepth + 10]))
+	.elasticY(true)
+	.xAxis().tickFormat(function(v) {return v;});
+
+  // time graph
+  timeChart
+    .dimension(volumeByDay)
+    .group(volumeByDayGroup)
+    .transitionDuration(500)
+	.elasticY(true)
+    .x(d3.time.scale().domain([new Date(1996, 1, 1), new Date(2015, 1, 1)])) // scale and domain of the graph
+    .xAxis();
+
+  // Year Chart
+  yearChart
+          .width(200)
+          .height(200)
+          .dimension(yearDim)
+          .group(countPerYear)
+          .innerRadius(20);
+
+  // Month Chart
+  monthChart
+          .width(200)
+          .height(200)
+          .dimension(monthDim)
+          .group(countPerMonth)
+          .innerRadius(20)
+          .ordering(function (d) {
+            var order = {
+              'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4,
+              'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8,
+              'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12
+            };
+            return order[d.key];
+          });
+
+  // Quarter Chart
+
+  quarterChart
+          .width(200)
+          .height(200)
+          .dimension(quarterDim)
+          .group(countPerQuarter)
+          .innerRadius(20);
+
+
+  // Bubble Chart
+
+  yearlyBubbleChart
+          .dimension(yearDim)
+          .group(countPerYearBubble)
+          .colors(colorbrewer.RdYlGn[9])
+          //.colorDomain([0, 5000])
+          .colorAccessor(function (p) {
+            return p.value.count;
+          })
+          .keyAccessor(function (p) {
+            return p.value.perWeek;
+          })
+          .valueAccessor(function (p) {
+            return p.value.avgMagnitude;
+          })
+          .radiusValueAccessor(function (p) {
+            return p.value.count;
+          })
+          .maxBubbleRelativeSize(0.05)
+          .x(d3.scale.linear().domain([0, maxCount/52]))
+          .y(d3.scale.linear().domain([0, 10]))
+          .r(d3.scale.linear().domain([minCount, maxCount]))
+          .elasticY(false)
+          .elasticX(true)
+          .yAxisPadding(2.0)
+          //.xAxisPadding()
+          .renderHorizontalGridLines(true)
+          .renderVerticalGridLines(true)
+          .xAxisLabel('Average Number of Earthquakes per week')
+          .yAxisLabel('Average Magnitude')
+          .renderLabel(true)
+          .label(function (p) {
+            return p.key;
+          });
+
+
+
+  // Table of earthquake data
+  dataTable
+    .dimension(magValue)
+	.group(function(d) { return ""
+	 })
+	.size(50)							// number of rows to return
+    .columns([
+      function(d) { return d.dtg; },
+      function(d) { return d.lat; },
+      function(d) { return d.long; },
+      function(d) { return d.depth; },
+      function(d) { return d.mag; },
+      function(d) { return d.place; },
+    ])
+    .sortBy(function(d){ return d.mag; })
+    .order(d3.descending).on('renderlet', function (table) {
+    // each time table is rendered remove nasty extra row dc.js insists on adding
+    table.select('tr.dc-table-group').remove();
+
+    // define max and min magnuted for top 50 shown on map
+
+    var maxMag50 = 0, minMag50 = 10;
+
+    _.each(magValue.top(50), function (d) {
+      if(d.mag>maxMag50){
+        maxMag50 = d.mag;
+      }
+      if(d.mag<minMag50){
+        minMag50 = d.mag;
+      }
+
+    });
+
+
+    // update Leaflet Map
+
+    markers.clearLayers();
+    _.each(magValue.top(50), function (d) {
+      var place = d.place;
+      var opacity = 0.2/(maxDepth - minDepth)*(d.depth - maxDepth)+0.5;
+      //var radius = Math.sqrt(d.mag/10)*60000;
+      //var radius = (60000)/(maxMag50 - minMag50)*(d.mag - maxMag50) + maxMag50*15000;
+      var radius = (d.mag-minMag50)*(maxMag50-minMag50)*30000 + 60000;
+      console.log(d.mag + ", " + minMag50 + ", " + maxMag50);
+      var marker = L.circle([d.lat, d.long], radius,{title: 'unselected',color: "red", weight: 0,fillOpacity: opacity,fillColor:"red"}).bindLabel(d.mag, { noHide: true }).addTo(map);
+
+      marker.bindPopup("<table><tr><td>Date:</td><td>" + d.dtg + "</td></tr>" +
+              "<tr><td>Mag:</td><td>" + d.mag + "</td></tr><tr><td>Depth (km):</td><td>" + d.depth + "</td></tr><tr><td style='white-space:nowrap;'>Distance to " + city + " (km): &nbsp; &nbsp;  </td><td>" +
+              d.distToTarget + "</td></tr><tr><td>Location:</td><td>" + d.place + "</td></tr></table>");
+
+
+      markers.addLayer(marker);
+    });
+    map.addLayer(markers);
+
+    map.fitBounds(markers.getBounds());
+  });
+
+
+
+  // register reset handlers
+
+  d3.selectAll('a#year').on('click', function () {
+    yearChart.filterAll();
+    dc.redrawAll();
+  });
+
+  d3.selectAll('a#month').on('click', function () {
+    monthChart.filterAll();
+    dc.redrawAll();
+  });
+
+  d3.selectAll('a#quarter').on('click', function () {
+    quarterChart.filterAll();
+    dc.redrawAll();
+  });
+
+  d3.selectAll('a#magnitude').on('click', function () {
+    magnitudeChart.filterAll();
+    dc.redrawAll();
+  });
+
+  d3.selectAll('a#depth').on('click', function () {
+    depthChart.filterAll();
+    dc.redrawAll();
+  });
+
+  d3.selectAll('a#time').on('click', function () {
+    timeChart.filterAll();
+    dc.redrawAll();
+  });
+
+  d3.selectAll('a#yearlyBubble').on('click', function () {
+    yearlyBubbleChart.filterAll();
+    dc.redrawAll();
+  });
+
+  d3.selectAll('a#all').on('click', function () {
+    yearChart.filterAll();
+    monthChart.filterAll();
+    quarterChart.filterAll();
+    magnitudeChart.filterAll();
+    depthChart.filterAll();
+    yearlyBubbleChart.filterAll();
+    timeChart.filterAll();
+    dc.redrawAll();
+  });
+
+
+
+
+
+  /****************************
+* Step6: Render the Charts and Set jQuery UI Accordion *
+****************************/
+			
+  dc.renderAll();
+
+  // UI Accordion
+$("#cities").selectmenu();
+
+
+  $.fn.togglepanels = function(){
+    return this.each(function(){
+      $(this).addClass("ui-accordion ui-accordion-icons ui-widget ui-helper-reset")
+              .find("h3")
+              .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
+              .hover(function() { $(this).toggleClass("ui-state-hover"); })
+              .prepend('<span class="ui-icon ui-icon-triangle-1-e"></span>')
+              .click(function() {
+                $(this)
+                        .toggleClass("ui-accordion-header-active ui-state-active ui-state-default ui-corner-bottom")
+                        .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e ui-icon-triangle-1-s").end()
+                        .next().slideToggle();
+                return false;
+              })
+              .next()
+              .addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom")
+              .hide();
+    });
+  };
+
+  $("#notaccordion").togglepanels();
+  $(".toggle").toggle();
+
+  $("")
+});
+  
+</script>
+    
+</body>
+</html>
